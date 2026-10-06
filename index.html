@@ -277,85 +277,15 @@
       color: #e91e63;
     }
 
-    /* ---- EXIT BUTTON ---- */
-    .exit-button-container {
-      text-align: center;
+    /* ---- CLOSING MESSAGE ---- */
+    .closing-message {
       margin-top: 25px;
-    }
-
-    .exit-button {
-      background: linear-gradient(135deg, #e91e63, #c2185b);
-      color: white;
-      border: none;
-      padding: 14px 40px;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
-      animation: buttonPulse 2s ease-in-out infinite;
-      letter-spacing: 0.5px;
-    }
-
-    .exit-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 30px rgba(233, 30, 99, 0.5);
-      background: linear-gradient(135deg, #f06292, #e91e63);
-    }
-
-    @keyframes buttonPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3); }
-      50% { transform: scale(1.03); box-shadow: 0 8px 25px rgba(233, 30, 99, 0.5); }
-    }
-
-    /* ---- EXIT OVERLAY ---- */
-    .exit-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(145deg, #fce4ec, #f8bbd0);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.8s ease;
-      flex-direction: column;
-    }
-
-    .exit-overlay.show {
-      display: flex;
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: scale(0.95); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .exit-content {
-      text-align: center;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    .exit-content .big-emoji {
-      font-size: 80px;
-      display: block;
-      margin-bottom: 20px;
-    }
-
-    .exit-content h1 {
-      font-size: 2.5rem;
-      color: #880e4f;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .exit-content p {
-      font-size: 1.2rem;
+      font-size: 1rem;
       color: #ad1457;
-      opacity: 0.8;
+      font-style: italic;
+      opacity: 0.85;
+      line-height: 1.6;
+      padding: 0 10px;
     }
 
     /* ---- EFFECTS ---- */
@@ -424,9 +354,7 @@
       .bouquet-container .bouquet-emoji { font-size: 130px; }
       .note-on-bouquet { font-size: 0.8rem; padding: 8px 16px; bottom: 5px; }
       .apology-text { font-size: 0.95rem; padding: 22px 18px; }
-      .exit-button { padding: 12px 30px; font-size: 1rem; }
-      .exit-content h1 { font-size: 2rem; }
-      .exit-content .big-emoji { font-size: 60px; }
+      .closing-message { font-size: 0.9rem; }
     }
 
     @media (max-width: 400px) {
@@ -434,6 +362,7 @@
       .note-on-bouquet { font-size: 0.7rem; padding: 6px 12px; bottom: 2px; }
       .apology-text { font-size: 0.85rem; padding: 18px 14px; }
       .letter-header h1 { font-size: 1.5rem; }
+      .closing-message { font-size: 0.8rem; }
     }
   </style>
 </head>
@@ -486,20 +415,10 @@
         <div class="heart-end">💗😔</div>
       </div>
 
-      <!-- CLOSE BUTTON -->
-      <div class="exit-button-container">
-        <button class="exit-button" id="exitButton">✨ I forgive you ✨</button>
+      <!-- CLOSING MESSAGE (replaces button) -->
+      <div class="closing-message">
+        I'll be here whenever you're ready. 💕
       </div>
-    </div>
-  </div>
-
-  <!-- EXIT OVERLAY -->
-  <div class="exit-overlay" id="exitOverlay">
-    <div class="exit-content">
-      <span class="big-emoji">🫂😊</span>
-      <h1>Thank you, MJ 💖</h1>
-      <p>Please? 💕🥺</p>
-      <p style="margin-top: 14px; font-size: 1rem; opacity: 0.7;">— Ron</p>
     </div>
   </div>
 
@@ -704,18 +623,6 @@
       }, 600);
     });
 
-    // ---- EXIT BUTTON ----
-    const exitButton = document.getElementById('exitButton');
-    const exitOverlay = document.getElementById('exitOverlay');
-
-    exitButton.addEventListener('click', function() {
-      exitOverlay.classList.add('show');
-      createCelebration();
-      createCelebration();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      sound.playCelebrationSound();
-    });
-
     // ---- CELEBRATION (with mixed emotions) ----
     function createCelebration() {
       for (let i = 0; i < 30; i++) {
@@ -760,7 +667,7 @@
 
     // ---- BACKGROUND HEARTS & SAD EMOJIS ----
     setInterval(() => {
-      if (letterContainer.style.display === 'block' || exitOverlay.classList.contains('show')) {
+      if (letterContainer.style.display === 'block') {
         createHeart();
       }
     }, 3000);
