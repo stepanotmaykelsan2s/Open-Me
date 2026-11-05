@@ -84,22 +84,29 @@
             100% { transform: scale(1.5) translate(var(--x), var(--y)); opacity: 0; }
         }
 
-        /* --- MAIN CONTAINER --- */
+        /* --- MAIN CONTAINER (Fixed for responsiveness) --- */
         .container {
             position: relative;
             width: 90vw;
             max-width: 360px;
-            height: 550px;
+            /* Using vh instead of fixed px so it scales on all phones */
+            height: 70vh; 
+            max-height: 600px;
+            min-height: 500px;
             z-index: 10;
             perspective: 1500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20px;
         }
 
         /* --- ENVELOPE WRAPPER --- */
         .envelope-wrapper {
-            position: absolute;
+            position: relative; /* Changed from absolute */
             width: 100%;
-            height: 260px;
-            bottom: 50px;
+            height: 240px; /* Slightly shorter to fit better */
             cursor: pointer;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 20;
@@ -133,16 +140,16 @@
             border: 2px dashed rgba(255, 255, 255, 0.15);
         }
 
-        /* The Flap */
+        /* The Flap (Adjusted border sizes to fit the 360px width) */
         .envelope-flap {
             position: absolute;
             top: -2px;
             left: -2px;
             width: 0;
             height: 0;
-            border-left: 182px solid transparent;
-            border-right: 182px solid transparent;
-            border-top: 145px solid #25252d;
+            border-left: 176px solid transparent;
+            border-right: 176px solid transparent;
+            border-top: 140px solid #25252d;
             transform-origin: top;
             transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s;
             z-index: 30;
@@ -153,10 +160,10 @@
             background-image: linear-gradient(to right, transparent 48%, rgba(255,255,255,0.1) 49%, rgba(255,255,255,0.1) 51%, transparent 52%);
         }
 
-        /* Wax Seal */
+        /* Wax Seal (Fixed position so it stays on the flap) */
         .wax-seal {
             position: absolute;
-            top: 125px;
+            top: 120px;
             left: 50%;
             transform: translateX(-50%);
             width: 44px;
@@ -179,7 +186,7 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 130px;
+            height: 120px;
             background-color: #18181d;
             background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 4px);
             z-index: 25;
@@ -191,7 +198,7 @@
         /* Subtle "To: Mj" on the envelope */
         .to-text {
             position: absolute;
-            bottom: 50px;
+            bottom: 40px;
             width: 100%;
             text-align: center;
             font-family: 'Dancing Script', cursive;
@@ -205,7 +212,7 @@
         /* Floating "Open Me" Button */
         .open-me {
             position: absolute;
-            top: -60px;
+            top: -50px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(255, 255, 255, 0.15);
@@ -222,6 +229,7 @@
             pointer-events: none;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             white-space: nowrap;
+            z-index: 40;
         }
 
         @keyframes floatBob {
@@ -229,20 +237,20 @@
             50% { transform: translate(-50%, -10px); }
         }
 
-        /* --- VINTAGE LETTER DESIGN --- */
+        /* --- VINTAGE LETTER DESIGN (Repositioned) --- */
         .letter {
             position: absolute;
             width: 92%;
-            height: 380px; /* Adjusted height so it stays hidden */
+            height: 390px;
             background-color: #fdf5e6; 
             left: 4%;
-            bottom: 30px;
+            bottom: 20px; /* Starts low inside the envelope */
             border-radius: 3px;
             box-shadow: 
                 0 10px 30px rgba(0,0,0,0.3), 
                 inset 0 0 40px rgba(139, 69, 19, 0.1); 
-            z-index: 15; /* Lower than the flap and pocket */
-            padding: 30px 25px;
+            z-index: 15; 
+            padding: 25px 20px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -298,12 +306,12 @@
             transform: translateY(10px);
             transition: opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .letter h2 {
             font-family: 'Dancing Script', cursive;
-            font-size: 30px;
+            font-size: 28px;
             color: #5a4a42;
             margin-bottom: 5px;
             text-align: left;
@@ -313,18 +321,18 @@
         .letter h1 {
             font-family: 'Permanent Marker', cursive;
             color: #3b3b4f; 
-            font-size: 32px;
+            font-size: 30px;
             line-height: 1.2;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             transform: rotate(-2deg);
             text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
         }
 
         .letter p {
-            font-size: 15px;
+            font-size: 14px;
             color: #444;
             font-style: italic;
-            line-height: 1.6;
+            line-height: 1.5;
             max-width: 95%;
             margin: 0 auto;
             text-align: left;
@@ -334,11 +342,11 @@
         /* Signature */
         .signature {
             font-family: 'Dancing Script', cursive;
-            font-size: 26px;
+            font-size: 24px;
             color: #5a4a42;
             text-align: right;
             width: 90%;
-            margin-top: 15px;
+            margin-top: 10px;
             transform: rotate(-3deg);
             opacity: 0.85;
         }
@@ -349,10 +357,10 @@
             background: rgba(139, 69, 19, 0.1);
             border: 1px solid rgba(139, 69, 19, 0.3);
             color: #8b4513;
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-family: 'Playfair Display', serif;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             cursor: pointer;
             opacity: 0;
@@ -366,9 +374,9 @@
 
         /* The hidden message */
         .hidden-msg {
-            margin-top: 10px;
+            margin-top: 5px;
             font-family: 'Dancing Script', cursive;
-            font-size: 20px;
+            font-size: 18px;
             color: #d35400;
             max-height: 0;
             overflow: hidden;
@@ -384,7 +392,8 @@
 
         /* --- ANIMATION STATES (When Opened) --- */
         .container.opened .letter {
-            transform: translateY(-220px) scale(1.02); /* Moves higher up */
+            /* Slides up perfectly based on screen size */
+            transform: translateY(-160px) scale(1.02); 
             z-index: 40;
         }
 
@@ -415,7 +424,7 @@
         }
         
         .container.opened .envelope-wrapper {
-            transform: translateY(30px);
+            transform: translateY(20px);
         }
 
     </style>
