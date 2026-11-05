@@ -84,14 +84,13 @@
             100% { transform: scale(1.5) translate(var(--x), var(--y)); opacity: 0; }
         }
 
-        /* --- MAIN CONTAINER (Fixed for responsiveness) --- */
+        /* --- MAIN CONTAINER --- */
         .container {
             position: relative;
             width: 90vw;
             max-width: 360px;
-            /* Using vh instead of fixed px so it scales on all phones */
-            height: 70vh; 
-            max-height: 600px;
+            height: 75vh; /* Slightly taller to give the paper room */
+            max-height: 650px;
             min-height: 500px;
             z-index: 10;
             perspective: 1500px;
@@ -102,11 +101,28 @@
             padding-bottom: 20px;
         }
 
+        /* --- THE MASK (This hides the paper before opening) --- */
+        .letter-mask {
+            position: absolute;
+            bottom: 20px;
+            width: 92%;
+            height: 240px; /* Only covers the bottom part of the envelope */
+            overflow: hidden; /* Hides anything that goes above this box */
+            z-index: 15;
+            transition: z-index 0.1s; /* Keeps the paper behind the pocket */
+        }
+
+        /* When opened, disable the mask so the paper can fly up */
+        .container.opened .letter-mask {
+            overflow: visible;
+            z-index: 40;
+        }
+
         /* --- ENVELOPE WRAPPER --- */
         .envelope-wrapper {
-            position: relative; /* Changed from absolute */
+            position: relative; 
             width: 100%;
-            height: 240px; /* Slightly shorter to fit better */
+            height: 240px; 
             cursor: pointer;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 20;
@@ -135,12 +151,10 @@
             box-shadow: 
                 inset 0 0 20px rgba(0,0,0,0.8),
                 inset 0 2px 2px rgba(255,255,255,0.1);
-            
-            /* Stitching Border Effect */
             border: 2px dashed rgba(255, 255, 255, 0.15);
         }
 
-        /* The Flap (Adjusted border sizes to fit the 360px width) */
+        /* The Flap */
         .envelope-flap {
             position: absolute;
             top: -2px;
@@ -155,12 +169,10 @@
             z-index: 30;
             border-radius: 6px;
             filter: drop-shadow(0 8px 10px rgba(0,0,0,0.4)); 
-            
-            /* Stitching on flap */
             background-image: linear-gradient(to right, transparent 48%, rgba(255,255,255,0.1) 49%, rgba(255,255,255,0.1) 51%, transparent 52%);
         }
 
-        /* Wax Seal (Fixed position so it stays on the flap) */
+        /* Wax Seal */
         .wax-seal {
             position: absolute;
             top: 120px;
@@ -237,19 +249,17 @@
             50% { transform: translate(-50%, -10px); }
         }
 
-        /* --- VINTAGE LETTER DESIGN (Repositioned) --- */
+        /* --- VINTAGE LETTER DESIGN --- */
         .letter {
             position: absolute;
-            width: 92%;
+            width: 100%;
             height: 390px;
             background-color: #fdf5e6; 
-            left: 4%;
-            bottom: 20px; /* Starts low inside the envelope */
+            bottom: 0; 
             border-radius: 3px;
             box-shadow: 
                 0 10px 30px rgba(0,0,0,0.3), 
                 inset 0 0 40px rgba(139, 69, 19, 0.1); 
-            z-index: 15; 
             padding: 25px 20px;
             text-align: center;
             display: flex;
@@ -257,7 +267,6 @@
             justify-content: flex-start;
             align-items: center;
             
-            /* Paper Texture, Lines, and Coffee Stain Effect */
             background-image: 
                 linear-gradient(rgba(139, 69, 19, 0.15) 1px, transparent 1px),
                 radial-gradient(circle at 80% 80%, rgba(160, 82, 45, 0.15) 0%, transparent 40%),
@@ -392,9 +401,8 @@
 
         /* --- ANIMATION STATES (When Opened) --- */
         .container.opened .letter {
-            /* Slides up perfectly based on screen size */
-            transform: translateY(-160px) scale(1.02); 
-            z-index: 40;
+            /* Slides up smoothly */
+            transform: translateY(-140px) scale(1.02); 
         }
 
         .container.opened .letter-content {
@@ -436,19 +444,22 @@
 
     <div class="container" id="main-container">
         
-        <!-- The Vintage Letter -->
-        <div class="letter">
-            <div class="stamp">M</div>
-            <div class="letter-content">
-                <h2>Dearest Mj,</h2>
-                <h1>Goodluck on Your Exams!!</h1>
-                <p>Hello!!, sorry i was silent for a while kasi ginagawa koto AHHAHAHHA, But i just want to Cheer you up😘</p>
-                
-                <div class="signature">From: Ron</div>
+        <!-- The Letter Mask (Hides the paper) -->
+        <div class="letter-mask">
+            <!-- The Vintage Letter -->
+            <div class="letter">
+                <div class="stamp">M</div>
+                <div class="letter-content">
+                    <h2>Dearest Mj,</h2>
+                    <h1>Goodluck on Your Exams!!</h1>
+                    <p>Hello!!, sorry i was silent for a while kasi ginagawa koto AHHAHAHHA, But i just want to Cheer you up😘</p>
+                    
+                    <div class="signature">From: Ron</div>
 
-                <button class="ps-btn" id="ps-btn" onclick="revealSecret(event)">P.S. Click Here</button>
-                <div class="hidden-msg" id="hidden-msg">
-                    I believe in you always! You've got this. 🤍
+                    <button class="ps-btn" id="ps-btn" onclick="revealSecret(event)">P.S. Click Here</button>
+                    <div class="hidden-msg" id="hidden-msg">
+                        I believe in you always! You've got this. 🤍
+                    </div>
                 </div>
             </div>
         </div>
