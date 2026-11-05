@@ -1,677 +1,545 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Open It</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Mj</title>
+    <!-- Importing Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent; 
+        }
 
-    body {
-      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(145deg, #fce4ec, #f8bbd0);
-      padding: 20px;
-      transition: background 0.5s ease;
-      position: relative;
-      overflow-x: hidden;
-    }
+        body {
+            /* Rich, deep mixed colors of red, pink, and purple */
+            background: linear-gradient(135deg, #ff4b72 0%, #e056fd 40%, #686de0 100%);
+            background-size: 200% 200%;
+            animation: bgGradient 12s ease infinite;
+            font-family: 'Playfair Display', serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-    /* ---- ENVELOPE ---- */
-    .envelope-container {
-      max-width: 550px;
-      width: 100%;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
+        @keyframes bgGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    .envelope-container:hover {
-      transform: scale(1.02);
-    }
+        /* Magical background glow effects */
+        .bg-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            animation: floatOrb 8s ease-in-out infinite alternate;
+        }
+        @keyframes floatOrb {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-30px) scale(1.1); }
+        }
 
-    .envelope {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
-      padding: 50px 40px;
-      border-radius: 40px;
-      box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      transition: all 0.5s ease;
-    }
+        /* Floating Hearts */
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 20px;
+            animation: floatUp 8s linear infinite;
+            bottom: -50px;
+            z-index: 2;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
 
-    .envelope-emoji {
-      font-size: 80px;
-      display: block;
-      margin-bottom: 15px;
-      animation: float 3s ease-in-out infinite;
-    }
+        /* Click Sparkle Effect */
+        .click-sparkle {
+            position: absolute;
+            pointer-events: none;
+            font-size: 16px;
+            z-index: 999;
+            animation: popOut 0.6s ease-out forwards;
+        }
+        @keyframes popOut {
+            0% { transform: scale(0.5) translate(0, 0); opacity: 1; }
+            100% { transform: scale(1.5) translate(var(--x), var(--y)); opacity: 0; }
+        }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
+        /* --- MAIN CONTAINER --- */
+        .container {
+            position: relative;
+            width: 90vw;
+            max-width: 360px;
+            height: 550px;
+            z-index: 10;
+            perspective: 1500px;
+        }
 
-    .envelope h2 {
-      color: #880e4f;
-      font-size: 1.8rem;
-      font-weight: 400;
-      letter-spacing: 1px;
-      margin-top: 10px;
-    }
+        /* --- ENVELOPE WRAPPER --- */
+        .envelope-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 260px;
+            bottom: 50px;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 20;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3)); 
+        }
 
-    .envelope .sub {
-      color: #ad1457;
-      font-size: 1rem;
-      opacity: 0.8;
-      margin-top: 12px;
-      font-style: italic;
-    }
+        .envelope-wrapper:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        
+        .envelope-wrapper:active {
+            transform: scale(0.98);
+        }
 
-    .tap-hint {
-      margin-top: 25px;
-      color: #880e4f;
-      font-size: 0.9rem;
-      animation: pulse 2s ease-in-out infinite;
-    }
+        /* The Envelope Body - Realistic Dark Denim Texture */
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1e1e24;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 4px),
+                repeating-linear-gradient(-45deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 4px),
+                linear-gradient(to bottom, #2a2a35, #15151a);
+            border-radius: 6px;
+            box-shadow: 
+                inset 0 0 20px rgba(0,0,0,0.8),
+                inset 0 2px 2px rgba(255,255,255,0.1);
+            
+            /* Stitching Border Effect */
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+        }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 1; }
-    }
+        /* The Flap */
+        .envelope-flap {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 0;
+            height: 0;
+            border-left: 182px solid transparent;
+            border-right: 182px solid transparent;
+            border-top: 145px solid #25252d;
+            transform-origin: top;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s;
+            z-index: 30;
+            border-radius: 6px;
+            filter: drop-shadow(0 8px 10px rgba(0,0,0,0.4)); 
+            
+            /* Stitching on flap */
+            background-image: linear-gradient(to right, transparent 48%, rgba(255,255,255,0.1) 49%, rgba(255,255,255,0.1) 51%, transparent 52%);
+        }
 
-    /* ---- LETTER ---- */
-    .letter-container {
-      display: none;
-      max-width: 620px;
-      width: 100%;
-      animation: fadeInUp 1s ease;
-    }
+        /* Wax Seal */
+        .wax-seal {
+            position: absolute;
+            top: 125px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 44px;
+            height: 44px;
+            background: radial-gradient(circle at 30% 30%, #ff4b72, #8b0020);
+            border-radius: 50%;
+            z-index: 35;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.4);
+            transition: opacity 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255,255,255,0.8);
+            font-family: 'Dancing Script', cursive;
+            font-size: 22px;
+        }
 
-    @keyframes fadeInUp {
-      0% { opacity: 0; transform: translateY(30px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
+        /* Inner pocket */
+        .envelope-pocket {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 130px;
+            background-color: #18181d;
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 4px);
+            z-index: 25;
+            clip-path: polygon(0 35%, 50% 0, 100% 35%, 100% 100%, 0% 100%);
+            border-radius: 0 0 6px 6px;
+            box-shadow: inset 0 10px 15px rgba(0,0,0,0.6);
+        }
 
-    .letter {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px);
-      padding: 50px 40px;
-      border-radius: 40px;
-      box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      text-align: center;
-      position: relative;
-    }
+        /* Subtle "To: Mj" on the envelope */
+        .to-text {
+            position: absolute;
+            bottom: 50px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 26px;
+            color: rgba(255, 255, 255, 0.3);
+            z-index: 26;
+            pointer-events: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
 
-    .letter::before {
-      content: '💌';
-      position: absolute;
-      top: -20px;
-      left: -10px;
-      font-size: 40px;
-      transform: rotate(-15deg);
-    }
+        /* Floating "Open Me" Button */
+        .open-me {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            padding: 8px 24px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 18px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            animation: floatBob 2s ease-in-out infinite;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            white-space: nowrap;
+        }
 
-    .letter-header {
-      margin-bottom: 25px;
-    }
+        @keyframes floatBob {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -10px); }
+        }
 
-    .letter-header .to {
-      font-size: 0.9rem;
-      color: #ad1457;
-      opacity: 0.6;
-      letter-spacing: 2px;
-    }
+        /* --- VINTAGE LETTER DESIGN --- */
+        .letter {
+            position: absolute;
+            width: 92%;
+            height: 380px; /* Adjusted height so it stays hidden */
+            background-color: #fdf5e6; 
+            left: 4%;
+            bottom: 30px;
+            border-radius: 3px;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.3), 
+                inset 0 0 40px rgba(139, 69, 19, 0.1); 
+            z-index: 15; /* Lower than the flap and pocket */
+            padding: 30px 25px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            
+            /* Paper Texture, Lines, and Coffee Stain Effect */
+            background-image: 
+                linear-gradient(rgba(139, 69, 19, 0.15) 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, rgba(160, 82, 45, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 20% 30%, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 100% 28px, 100% 100%, 4px 4px;
+            
+            transition: transform 1.4s cubic-bezier(0.25, 1, 0.3, 1);
+            transform: translateY(0);
+        }
 
-    .letter-header h1 {
-      font-size: 2.2rem;
-      color: #880e4f;
-      font-weight: 700;
-    }
+        /* Torn edge effect */
+        .letter::before {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: #fdf5e6;
+            clip-path: polygon(0% 100%, 2% 40%, 5% 80%, 8% 30%, 12% 70%, 15% 20%, 20% 80%, 25% 40%, 30% 90%, 35% 30%, 40% 80%, 45% 20%, 50% 70%, 55% 30%, 60% 80%, 65% 20%, 70% 90%, 75% 30%, 80% 80%, 85% 40%, 90% 90%, 95% 30%, 98% 80%, 100% 100%);
+        }
 
-    /* ---- BOUQUET ---- */
-    .bouquet-container {
-      position: relative;
-      display: inline-block;
-      cursor: pointer;
-      margin: 20px 0 30px;
-      transition: transform 0.3s ease;
-    }
+        /* Vintage Postage Stamp */
+        .stamp {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 45px;
+            height: 55px;
+            background-color: #e8d5c4;
+            border: 2px dashed #c4a48f;
+            border-radius: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Dancing Script', cursive;
+            color: #c4a48f;
+            font-size: 14px;
+            transform: rotate(8deg);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            opacity: 0.8;
+        }
 
-    .bouquet-container:hover {
-      transform: scale(1.02);
-    }
+        .letter-content {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s;
+            width: 100%;
+            margin-top: 20px;
+        }
 
-    .bouquet-container .bouquet-emoji {
-      font-size: 180px;
-      display: block;
-      line-height: 1.2;
-      transition: all 0.5s ease;
-      user-select: none;
-      animation: bouquetFloat 4s ease-in-out infinite;
-    }
+        .letter h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 30px;
+            color: #5a4a42;
+            margin-bottom: 5px;
+            text-align: left;
+            padding-left: 10px;
+        }
 
-    @keyframes bouquetFloat {
-      0%, 100% { transform: translateY(0) rotate(-2deg); }
-      50% { transform: translateY(-12px) rotate(2deg); }
-    }
+        .letter h1 {
+            font-family: 'Permanent Marker', cursive;
+            color: #3b3b4f; 
+            font-size: 32px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            transform: rotate(-2deg);
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+        }
 
-    .bouquet-container .bouquet-emoji.tapped {
-      animation: bouquetBloom 1s ease;
-    }
+        .letter p {
+            font-size: 15px;
+            color: #444;
+            font-style: italic;
+            line-height: 1.6;
+            max-width: 95%;
+            margin: 0 auto;
+            text-align: left;
+            padding-left: 10px;
+        }
 
-    @keyframes bouquetBloom {
-      0% { transform: scale(0.7) rotate(-10deg); }
-      40% { transform: scale(1.15) rotate(5deg); }
-      70% { transform: scale(0.95) rotate(-3deg); }
-      100% { transform: scale(1) rotate(0deg); }
-    }
+        /* Signature */
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 26px;
+            color: #5a4a42;
+            text-align: right;
+            width: 90%;
+            margin-top: 15px;
+            transform: rotate(-3deg);
+            opacity: 0.85;
+        }
 
-    .note-on-bouquet {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.98);
-      padding: 12px 28px;
-      border-radius: 50px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      border: 2px solid #f8bbd0;
-      font-size: 1rem;
-      color: #880e4f;
-      font-weight: 500;
-      white-space: nowrap;
-      opacity: 0;
-      transition: all 0.5s ease;
-      pointer-events: none;
-    }
+        /* --- INTERACTIVE "P.S." BUTTON --- */
+        .ps-btn {
+            margin-top: 15px;
+            background: rgba(139, 69, 19, 0.1);
+            border: 1px solid rgba(139, 69, 19, 0.3);
+            color: #8b4513;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
 
-    .note-on-bouquet.show {
-      opacity: 1;
-      animation: notePop 0.6s ease;
-    }
+        .ps-btn:hover {
+            background: rgba(139, 69, 19, 0.2);
+        }
 
-    @keyframes notePop {
-      0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
-      60% { transform: translateX(-50%) scale(1.1); }
-      100% { transform: translateX(-50%) scale(1); opacity: 1; }
-    }
+        /* The hidden message */
+        .hidden-msg {
+            margin-top: 10px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 20px;
+            color: #d35400;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
 
-    .note-on-bouquet .heart {
-      color: #e91e63;
-    }
+        .hidden-msg.show {
+            max-height: 100px;
+            opacity: 1;
+            margin-top: 10px;
+        }
 
-    /* ---- APOLOGY TEXT ---- */
-    .apology-text {
-      font-size: 1.05rem;
-      color: #4a1a2c;
-      line-height: 1.8;
-      margin: 10px 0 20px;
-      padding: 32px 28px;
-      background: rgba(248, 187, 208, 0.15);
-      border-radius: 30px;
-      border: 1px solid rgba(248, 187, 208, 0.4);
-      text-align: center;
-      position: relative;
-    }
+        /* --- ANIMATION STATES (When Opened) --- */
+        .container.opened .letter {
+            transform: translateY(-220px) scale(1.02); /* Moves higher up */
+            z-index: 40;
+        }
 
-    .apology-icon {
-      font-size: 2.2rem;
-      margin-bottom: 18px;
-      display: block;
-    }
+        .container.opened .letter-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    .apology-body {
-      text-align: left;
-      padding: 0 10px;
-    }
+        .container.opened .ps-btn {
+            opacity: 1;
+            pointer-events: auto;
+            transition-delay: 1.2s;
+        }
 
-    .apology-body p {
-      margin-bottom: 18px;
-    }
+        .container.opened .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 10;
+        }
 
-    .apology-body p:last-child {
-      margin-bottom: 0;
-    }
+        .container.opened .wax-seal {
+            opacity: 0;
+        }
 
-    .apology-footer {
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px dashed rgba(136, 14, 79, 0.15);
-      font-size: 1.05rem;
-    }
+        .container.opened .open-me {
+            opacity: 0;
+            transform: translate(-50%, 20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        
+        .container.opened .envelope-wrapper {
+            transform: translateY(30px);
+        }
 
-    .apology-text .big-heart {
-      color: #e91e63;
-      font-size: 1.2rem;
-    }
-
-    .apology-text .sad-emoji {
-      font-size: 1.1rem;
-    }
-
-    /* ---- FOOTER ---- */
-    .letter-footer {
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(136, 14, 79, 0.1);
-    }
-
-    .letter-footer .signature {
-      font-size: 1.2rem;
-      color: #880e4f;
-      font-weight: 600;
-    }
-
-    .letter-footer .heart-end {
-      font-size: 28px;
-      margin-top: 10px;
-      color: #e91e63;
-    }
-
-    /* ---- CLOSING MESSAGE ---- */
-    .closing-message {
-      margin-top: 25px;
-      font-size: 1rem;
-      color: #ad1457;
-      font-style: italic;
-      opacity: 0.85;
-      line-height: 1.6;
-      padding: 0 10px;
-    }
-
-    /* ---- EFFECTS ---- */
-    .sparkle-burst {
-      position: fixed;
-      pointer-events: none;
-      z-index: 999;
-      font-size: 30px;
-      animation: sparkleBurst 1.2s ease forwards;
-    }
-
-    @keyframes sparkleBurst {
-      0% { opacity: 1; transform: translate(0, 0) scale(0.3) rotate(0deg); }
-      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(360deg); }
-    }
-
-    .petal {
-      position: fixed;
-      font-size: 28px;
-      pointer-events: none;
-      z-index: 999;
-      animation: petalFall linear forwards;
-      opacity: 0.8;
-    }
-
-    @keyframes petalFall {
-      0% { opacity: 0; transform: translateY(-30px) rotate(0deg) scale(0.5); }
-      10% { opacity: 0.9; }
-      100% { opacity: 0; transform: translateY(110vh) rotate(720deg) scale(1); }
-    }
-
-    .heart-float {
-      position: fixed;
-      font-size: 24px;
-      pointer-events: none;
-      z-index: 999;
-      animation: heartRise linear forwards;
-    }
-
-    @keyframes heartRise {
-      0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
-      100% { opacity: 0; transform: translateY(-120px) scale(0.5) rotate(40deg); }
-    }
-
-    .confetti-piece {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      pointer-events: none;
-      z-index: 999;
-      animation: confettiFall linear forwards;
-    }
-
-    @keyframes confettiFall {
-      0% { opacity: 1; transform: translateY(-20px) rotate(0deg); }
-      100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
-    }
-
-    /* ---- RESPONSIVE ---- */
-    @media (max-width: 500px) {
-      .envelope { padding: 35px 25px; }
-      .envelope-emoji { font-size: 60px; }
-      .envelope h2 { font-size: 1.4rem; }
-      .letter { padding: 30px 20px; }
-      .letter-header h1 { font-size: 1.7rem; }
-      .bouquet-container .bouquet-emoji { font-size: 130px; }
-      .note-on-bouquet { font-size: 0.8rem; padding: 8px 16px; bottom: 5px; }
-      .apology-text { font-size: 0.95rem; padding: 22px 18px; }
-      .closing-message { font-size: 0.9rem; }
-    }
-
-    @media (max-width: 400px) {
-      .bouquet-container .bouquet-emoji { font-size: 100px; }
-      .note-on-bouquet { font-size: 0.7rem; padding: 6px 12px; bottom: 2px; }
-      .apology-text { font-size: 0.85rem; padding: 18px 14px; }
-      .letter-header h1 { font-size: 1.5rem; }
-      .closing-message { font-size: 0.8rem; }
-    }
-  </style>
+    </style>
 </head>
 <body>
 
-  <!-- ENVELOPE -->
-  <div class="envelope-container" id="envelopeContainer">
-    <div class="envelope">
-      <span class="envelope-emoji">😔💌</span>
-      <h2>For MJ</h2>
-      <p class="sub">I'm so sorry… please open this 🥺</p>
-      <p class="tap-hint">👆 tap to open</p>
+    <!-- Background Effects -->
+    <div class="bg-glow" id="bg-glow"></div>
+
+    <div class="container" id="main-container">
+        
+        <!-- The Vintage Letter -->
+        <div class="letter">
+            <div class="stamp">M</div>
+            <div class="letter-content">
+                <h2>Dearest Mj,</h2>
+                <h1>Goodluck on Your Exams!!</h1>
+                <p>Hello!!, sorry i was silent for a while kasi ginagawa koto AHHAHAHHA, But i just want to Cheer you up😘</p>
+                
+                <div class="signature">From: Ron</div>
+
+                <button class="ps-btn" id="ps-btn" onclick="revealSecret(event)">P.S. Click Here</button>
+                <div class="hidden-msg" id="hidden-msg">
+                    I believe in you always! You've got this. 🤍
+                </div>
+            </div>
+        </div>
+
+        <!-- The Envelope -->
+        <div class="envelope-wrapper" id="envelope-wrapper" onclick="openEnvelope(event)">
+            <div class="open-me">Open Me</div>
+            <div class="envelope">
+                <div class="envelope-flap">
+                    <div class="wax-seal">M</div>
+                </div>
+                <div class="envelope-pocket">
+                    <div class="to-text">To: Mj</div>
+                </div>
+            </div>
+        </div>
+
     </div>
-  </div>
 
-  <!-- LETTER -->
-  <div class="letter-container" id="letterContainer">
-    <div class="letter">
-      <div class="letter-header">
-        <div class="to">💕 To my dearest</div>
-        <h1>MJ</h1>
-      </div>
-
-      <!-- BOUQUET -->
-      <div class="bouquet-container" id="bouquetContainer">
-        <span class="bouquet-emoji" id="bouquetEmoji">💐</span>
-        <div class="note-on-bouquet" id="noteOnBouquet">
-          <span class="heart">❤️</span> I'm sorry <span class="heart">❤️</span>
-        </div>
-      </div>
-
-      <!-- APOLOGY MESSAGE -->
-      <div class="apology-text">
-        <div class="apology-icon">💔</div>
-        <div class="apology-body">
-          <p>I fell asleep without telling you…<br />
-          that was wrong, and I'm sorry.</p>
-          <p>I should have said goodnight.<br />
-          I should have made you feel seen and valued.</p>
-          <p>I hate that I made you feel forgotten.<br />
-          I promise to do better.</p>
-        </div>
-        <div class="apology-footer">
-          <span class="big-heart">💕</span> Can you forgive me? <span class="sad-emoji">🥺</span>
-        </div>
-      </div>
-
-      <div class="letter-footer">
-        <div class="signature">Yours, Ron 💕</div>
-        <div class="heart-end">💗😔</div>
-      </div>
-
-      <!-- CLOSING MESSAGE (replaces button) -->
-      <div class="closing-message">
-        I'll be here whenever you're ready. 💕
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // ---- SOUND ENGINE ----
-    class SoundEngine {
-      constructor() {
-        this.ctx = null;
-        this.initialized = false;
-      }
-
-      init() {
-        if (this.initialized) return;
-        try {
-          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-          this.initialized = true;
-        } catch (e) {
-          console.log('Web Audio not supported');
+    <script>
+        // --- Background Effects ---
+        const bgGlow = document.getElementById('bg-glow');
+        
+        for (let i = 0; i < 5; i++) {
+            const orb = document.createElement('div');
+            orb.classList.add('glow-orb');
+            orb.style.width = (Math.random() * 200 + 100) + 'px';
+            orb.style.height = orb.style.width;
+            orb.style.left = (Math.random() * 100) + 'vw';
+            orb.style.top = (Math.random() * 100) + 'vh';
+            orb.style.animationDelay = (Math.random() * 5) + 's';
+            bgGlow.appendChild(orb);
         }
-      }
 
-      playBloomSound() {
-        this.init();
-        if (!this.ctx) return;
-        try {
-          const notes = [523, 659, 784, 880];
-          notes.forEach((freq, i) => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq + Math.random() * 50, this.ctx.currentTime + i * 0.08);
-            gain.gain.setValueAtTime(0.2, this.ctx.currentTime + i * 0.08);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + i * 0.08 + 0.3);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(this.ctx.currentTime + i * 0.08);
-            osc.stop(this.ctx.currentTime + i * 0.08 + 0.3);
-          });
-        } catch (e) { }
-      }
+        const symbols = ['♥', '✨', '🌸']; 
+        for (let i = 0; i < 20; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 4 + 6) + 's'; 
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heart.style.fontSize = (Math.random() * 15 + 15) + 'px'; 
+            bgGlow.appendChild(heart);
+        }
 
-      playCelebrationSound() {
-        this.init();
-        if (!this.ctx) return;
-        try {
-          const melody = [523, 587, 659, 784, 880, 988, 1047];
-          melody.forEach((freq, i) => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.1);
-            gain.gain.setValueAtTime(0.15, this.ctx.currentTime + i * 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + i * 0.1 + 0.25);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(this.ctx.currentTime + i * 0.1);
-            osc.stop(this.ctx.currentTime + i * 0.1 + 0.25);
-          });
-        } catch (e) { }
-      }
+        // --- Click Sparkle Effect ---
+        function createSparkles(e) {
+            const sparkleSymbols = ['✨', '🌟', '♥'];
+            for (let i = 0; i < 6; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('click-sparkle');
+                sparkle.innerText = sparkleSymbols[Math.floor(Math.random() * sparkleSymbols.length)];
+                
+                sparkle.style.left = e.clientX + 'px';
+                sparkle.style.top = e.clientY + 'px';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 60 + 20;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                sparkle.style.setProperty('--x', tx + 'px');
+                sparkle.style.setProperty('--y', ty + 'px');
+                
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 600);
+            }
+        }
 
-      playSoftChime() {
-        this.init();
-        if (!this.ctx) return;
-        try {
-          const notes = [784, 880, 1047];
-          notes.forEach((freq, i) => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.12);
-            gain.gain.setValueAtTime(0.1, this.ctx.currentTime + i * 0.12);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + i * 0.12 + 0.5);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(this.ctx.currentTime + i * 0.12);
-            osc.stop(this.ctx.currentTime + i * 0.12 + 0.5);
-          });
-        } catch (e) { }
-      }
-    }
+        // --- Interactions ---
+        let isOpened = false;
+        
+        function openEnvelope(e) {
+            createSparkles(e); 
 
-    const sound = new SoundEngine();
+            if (isOpened) return;
+            isOpened = true;
+            
+            const container = document.getElementById('main-container');
+            container.classList.add('opened');
+        }
 
-    // ---- BOUQUET INTERACTION ----
-    const bouquetContainer = document.getElementById('bouquetContainer');
-    const bouquetEmoji = document.getElementById('bouquetEmoji');
-    const note = document.getElementById('noteOnBouquet');
-    let hasBloomed = false;
-
-    bouquetContainer.addEventListener('click', function(e) {
-      sound.playBloomSound();
-
-      bouquetEmoji.classList.remove('tapped');
-      void bouquetEmoji.offsetWidth;
-      bouquetEmoji.classList.add('tapped');
-
-      note.classList.add('show');
-
-      createSparkles(e);
-      createPetals();
-
-      if (!hasBloomed) {
-        hasBloomed = true;
-        setTimeout(() => {
-          bouquetEmoji.textContent = '🌺';
-          setTimeout(() => {
-            bouquetEmoji.textContent = '💐';
+        function revealSecret(e) {
+            e.stopPropagation(); 
+            createSparkles(e); 
+            
+            const hiddenMsg = document.getElementById('hidden-msg');
+            const btn = document.getElementById('ps-btn');
+            
+            hiddenMsg.classList.add('show');
+            btn.style.opacity = '0'; 
+            
             setTimeout(() => {
-              bouquetEmoji.textContent = '🌷';
-              setTimeout(() => {
-                bouquetEmoji.textContent = '💐';
-                sound.playCelebrationSound();
-                createCelebration();
-                showFloatingMessage('🌸 These flowers are my apology — I mean it 💕🥺');
-              }, 300);
+                btn.style.display = 'none';
             }, 300);
-          }, 300);
-        }, 500);
-      }
-    });
-
-    // ---- SPARKLES (with sad/pout emojis) ----
-    function createSparkles(event) {
-      const x = event.clientX;
-      const y = event.clientY;
-      const sparkleEmojis = ['✨', '⭐', '💫', '🌟', '🌸', '🌺', '😔', '🥺', '😞', '💔'];
-      for (let i = 0; i < 18; i++) {
-        const sparkle = document.createElement('div');
-        sparkle.className = 'sparkle-burst';
-        sparkle.textContent = sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)];
-        const angle = Math.random() * 2 * Math.PI;
-        const distance = Math.random() * 200 + 50;
-        sparkle.style.left = x + 'px';
-        sparkle.style.top = y + 'px';
-        sparkle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
-        sparkle.style.setProperty('--ty', Math.sin(angle) * distance - 100 + 'px');
-        sparkle.style.fontSize = (Math.random() * 20 + 16) + 'px';
-        document.body.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 1400);
-      }
-    }
-
-    // ---- PETALS (mixed with sad emojis) ----
-    function createPetals() {
-      const petalEmojis = ['🌸', '🌺', '🌷', '🌹', '💮', '🏵️', '😢', '😔', '🥺'];
-      for (let i = 0; i < 14; i++) {
-        setTimeout(() => {
-          const petal = document.createElement('div');
-          petal.className = 'petal';
-          petal.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
-          petal.style.left = (Math.random() * 90 + 5) + '%';
-          petal.style.top = '-20px';
-          petal.style.fontSize = (Math.random() * 20 + 18) + 'px';
-          petal.style.animationDuration = (Math.random() * 3 + 3) + 's';
-          petal.style.animationDelay = (Math.random() * 0.5) + 's';
-          document.body.appendChild(petal);
-          setTimeout(() => petal.remove(), 5000);
-        }, i * 100);
-      }
-    }
-
-    // ---- FLOATING MESSAGE ----
-    function showFloatingMessage(msg) {
-      const div = document.createElement('div');
-      div.style.cssText = `
-        position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-        background: rgba(255,255,255,0.97); padding: 14px 32px;
-        border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        font-size: 1.1rem; color: #880e4f; font-weight: 600;
-        z-index: 2000; text-align: center; border: 2px solid #f8bbd0;
-        animation: fadeInUp 0.5s ease; max-width: 90%;
-        transition: opacity 0.5s ease;
-      `;
-      div.textContent = msg;
-      document.body.appendChild(div);
-      setTimeout(() => {
-        div.style.opacity = '0';
-        setTimeout(() => div.remove(), 500);
-      }, 3200);
-    }
-
-    // ---- ENVELOPE REVEAL ----
-    const envelopeContainer = document.getElementById('envelopeContainer');
-    const letterContainer = document.getElementById('letterContainer');
-
-    envelopeContainer.addEventListener('click', function() {
-      sound.playSoftChime();
-
-      envelopeContainer.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      envelopeContainer.style.opacity = '0';
-      envelopeContainer.style.transform = 'scale(0.95)';
-
-      setTimeout(() => {
-        envelopeContainer.style.display = 'none';
-        letterContainer.style.display = 'block';
-        createCelebration();
-        if (window.innerWidth <= 600) {
-          document.querySelector('.letter-container').scrollIntoView({ behavior: 'smooth' });
         }
-        sound.init();
-      }, 600);
-    });
-
-    // ---- CELEBRATION (with mixed emotions) ----
-    function createCelebration() {
-      for (let i = 0; i < 30; i++) {
-        setTimeout(() => createHeart(), i * 70);
-      }
-      const colors = ['#e91e63', '#f06292', '#f8bbd0', '#ff4081', '#c2185b', '#880e4f'];
-      for (let i = 0; i < 60; i++) {
-        setTimeout(() => createConfetti(colors), i * 50);
-      }
-      for (let i = 0; i < 10; i++) {
-        setTimeout(() => createPetals(), i * 100);
-      }
-    }
-
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.className = 'heart-float';
-      const emojis = ['💕', '❤️', '💗', '💖', '💘', '💝', '😔', '🥺', '😞', '💔'];
-      heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      heart.style.left = Math.random() * 90 + 5 + '%';
-      heart.style.top = Math.random() * 60 + 20 + '%';
-      heart.style.fontSize = Math.random() * 18 + 16 + 'px';
-      heart.style.animationDuration = Math.random() * 2 + 2 + 's';
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 4000);
-    }
-
-    function createConfetti(colors) {
-      const piece = document.createElement('div');
-      piece.className = 'confetti-piece';
-      piece.style.left = Math.random() * 100 + '%';
-      piece.style.top = '-10px';
-      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-      piece.style.width = Math.random() * 8 + 4 + 'px';
-      piece.style.height = Math.random() * 8 + 4 + 'px';
-      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      piece.style.animationDuration = Math.random() * 2 + 2 + 's';
-      piece.style.transform = `rotate(${Math.random() * 360}deg)`;
-      document.body.appendChild(piece);
-      setTimeout(() => piece.remove(), 4500);
-    }
-
-    // ---- BACKGROUND HEARTS & SAD EMOJIS ----
-    setInterval(() => {
-      if (letterContainer.style.display === 'block') {
-        createHeart();
-      }
-    }, 3000);
-  </script>
-
+    </script>
 </body>
 </html>
